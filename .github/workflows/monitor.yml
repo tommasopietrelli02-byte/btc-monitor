@@ -26,7 +26,8 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python -c "from notifica import invia; invia('✅ Test dalla cloud: il monitor gira online, senza il tuo PC.')"
+        run: |
+          python -c "from notifica import invia; invia('✅ Test dalla cloud: il monitor gira online, senza il tuo PC.')"
 
       - name: Esegui il monitor
         env:
