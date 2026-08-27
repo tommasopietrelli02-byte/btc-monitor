@@ -21,6 +21,13 @@ jobs:
       - name: Installa librerie
         run: pip install -r requirements.txt
 
+      - name: Notifica di prova (solo avvio manuale)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -c "from notifica import invia; invia('✅ Test dalla cloud: il monitor gira online, senza il tuo PC.')"
+
       - name: Esegui il monitor
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
