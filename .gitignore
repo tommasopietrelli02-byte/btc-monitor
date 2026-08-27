@@ -1,0 +1,7 @@
+# Segreti: mai online
+config_locale.py
+
+# Ambiente Python e cache: non servono online
+.venv/
+__pycache__/
+*.pyc
