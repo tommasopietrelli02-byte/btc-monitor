@@ -5,3 +5,6 @@ config_locale.py
 .venv/
 __pycache__/
 *.pyc
+
+# Fotografia una tantum del passato: resta solo in locale
+storico_passato.csv

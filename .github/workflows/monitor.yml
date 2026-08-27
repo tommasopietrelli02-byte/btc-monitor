@@ -39,6 +39,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add stato.json notizie_viste.json
+          git add stato.json notizie_viste.json storico.csv
           git commit -m "aggiorna stato [skip ci]" || echo "niente da salvare"
           git push
