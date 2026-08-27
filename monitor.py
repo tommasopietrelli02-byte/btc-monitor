@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from prezzo import prezzo_btc
 from sentiment import fear_greed
 from notizie import notizie_rilevanti
+from stato_mercato import riassunto
 from notifica import invia
 
 STATO = "stato.json"
@@ -31,17 +32,28 @@ def registra_storico(riga):
 def controlla():
     prezzo, var24h = prezzo_btc()
     valore, etichetta = fear_greed()
+    notizie = notizie_rilevanti()
     stato = leggi_stato()
     precedente = stato["ultimo_prezzo"]
 
     variazione = None
+    allarme_prezzo = False
     if precedente is not None:
         variazione = (prezzo - precedente) / precedente * 100
-        if abs(variazione) >= SOGLIA_PCT:
+        allarme_prezzo = abs(variazione) >= SOGLIA_PCT
+
+    # Notifica (con riassunto descrittivo) solo se c'e' un movimento o una notizia
+    if allarme_prezzo or notizie:
+        testo = riassunto(prezzo, valore, etichetta, len(notizie))
+        if allarme_prezzo:
             direzione = "📈 su" if variazione > 0 else "📉 giù"
-            invia(f"{direzione} {variazione:+.2f}% dall'ultimo controllo\n"
-                  f"BTC ora: {prezzo:,.0f} EUR ({var24h:+.2f}% 24h)\n"
-                  f"Sentiment: {valore}/100 ({etichetta})")
+            intestazione = (f"⚠️ Movimento: {direzione} {variazione:+.2f}% "
+                            f"dall'ultimo controllo ({var24h:+.2f}% 24h)\n\n")
+            testo = intestazione + testo
+        invia(testo)
+
+    for titolo, link in notizie:
+        invia(f"📰 {titolo}\n{link}")
 
     ora = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
     var_prec = f"{variazione:.2f}" if variazione is not None else ""
@@ -50,9 +62,6 @@ def controlla():
     stato["ultimo_prezzo"] = prezzo
     salva_stato(stato)
     print(f"Controllato: {prezzo:,.0f} EUR (precedente: {precedente}) - riga salvata in {STORICO}")
-
-    for titolo, link in notizie_rilevanti():
-        invia(f"📰 {titolo}\n{link}")
 
 if __name__ == "__main__":
     controlla()
