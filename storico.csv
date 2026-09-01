@@ -355,3 +355,4 @@ data_ora_utc,prezzo_eur,var_24h_pct,var_dal_precedente_pct,fear_greed,fear_greed
 2026-09-01 14:04,67372,0.34,0.33,69,Greed
 2026-09-01 14:24,67374,0.42,0.00,69,Greed
 2026-09-01 14:37,67498,0.22,0.18,69,Greed
+2026-09-01 14:54,67498,-0.12,0.00,69,Greed
